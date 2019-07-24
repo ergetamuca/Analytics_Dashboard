@@ -1,0 +1,231 @@
+---
+title: "VRecruit"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+    theme: default
+    storyboard: true
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(ggplot2)
+library(readr)
+library(dplyr)
+library(shiny)
+library(digest)
+library(plotly)
+library(ggmap)
+library(DT)
+library(knitr)
+
+#read in data
+kolbe<- read_csv("/Users/em429g/Desktop/VR Recruit App/vrecruit_kolbe.csv")
+```
+
+Overall Dashboard {data-orientation=rows data-icon="fa-bar-chart"}
+============================================================
+
+## Row 1 {data-height=110}
+
+### Active Candidates
+
+```{r}
+valueBox(20, icon = "fa-user-check", color="mediumseagreen")
+```
+
+### Scheduled Interviews
+```{r}
+valueBox(3, icon = "fa-spinner")
+```
+
+### New Game Assessments
+```{r}
+valueBox(2, icon = "fa-gamepad", color="tomato")
+```
+
+## Row 2 {data-height=400} 
+
+### Game Session Length per Candidate
+
+```{r}
+x <- kolbe$candidate_name
+y <- kolbe$session_length_sec
+
+bar_chart_data <- data.frame(x, y)
+
+#bar chart
+p <- plot_ly(bar_chart_data, x = ~x, y = ~y, type = 'bar', color = I("#20B2AA")) %>%
+  layout(title = "",
+         xaxis = list(title = ""),
+         yaxis = list(title = "seconds"))
+p
+```
+
+### Average Kolbe Scores for Each Job Title
+```{r}
+k1<-c("Fact Finder", "Follow Through", "Quick Start", "Implementor")
+de<-c(2, 3.6, 4, 6)
+ds<-c(4, 4.3, 4.5, 4.5)
+me<-c(4.5, 6.5, 4.5, 5.5)
+pm<-c(5.3, 5.6, 3, 3.6)
+se<-c(4.6, 5, 3.8, 3.6)
+k2<-c(mean(kolbe$fact_finder), mean(kolbe$follow_thru), mean(kolbe$quick_start), mean(kolbe$implementor))
+df3<-data.frame(k1,de,ds,me,pm,se,k2)
+
+p3<- plot_ly(df3, x = ~k1, y = ~de, type = 'bar', name = 'Data Engineer', marker = list(color = '#6495ED')) %>%
+  add_trace(y = ~ds, name = 'Data Scientist', marker = list(color = '#00BFFF')) %>%
+  add_trace(y = ~me, name = 'Mechanical Engineer', marker = list(color = '#1E90FF')) %>%
+  add_trace(y = ~pm, name = 'Project Manager', marker = list(color = '#ADD8E6')) %>%
+  add_trace(y = ~se, name = 'Software Engineer', marker = list(color = '#87CEEB')) %>%
+  layout(xaxis = list(title = "", tickangle = -45),
+         yaxis = list(title = ""),
+         margin = list(b = 100),
+         barmode = 'group')
+
+p3
+```
+
+Candidate Profile {data-orientation=rows}
+============================================================
+
+## Row 1 {data-height=40}
+
+### Candidate #17
+```{r}
+valueBox("Kris Kornell", icon = "fa-user-circle", color="tomato")
+```
+
+## Row 2 {data-height=40}
+
+### Interview Process Complete
+```{r}
+valueBox("80%", icon = "fa-spinner")
+```
+
+### Open Job Applications
+```{r}
+valueBox(2, icon = "fa-folder-open", color="mediumseagreen")
+```
+
+## Row {data-height=150}
+
+### Kolbe Test Assessment
+```{r}
+#radar chart
+p4 <- plot_ly(
+    type = 'scatterpolar',
+    fill='toself'
+  ) %>%
+  add_trace(
+    r = c(7, 7, 3, 8),
+    theta = c('Fact Finder','Follow Through','Quick Start', 'Implementor'),
+    name = 'Candidate Assessment'
+  ) %>%
+  add_trace(
+    r = c(4.15, 4.85, 3.9, 4.45),
+    theta = c('Fact Finder','Follow Through','Quick Start', 'Implementor'),
+    name = 'Average Assessment'
+  ) %>%
+  layout(
+    polar = list(
+      radialaxis = list(
+        visible = T,
+        range = c(0,10)
+      )
+    )
+  )
+
+p4
+```
+
+### Ideal Job Placement based on Kolbe Assessment
+
+```{r}
+y <- c('Fact Finder<br>STRATEGIZE',
+       'Follow Through<br>SYSTEMATIZE',
+       'Quick Start<br>STABILIZE',
+       'Implementor<br>PROTECT')
+x1 <- c(21, 24, 27, 29)
+x2 <-c(30, 31, 26, 24)
+x3 <- c(21, 19, 23, 15)
+x4 <- c(16, 15, 11, 18)
+x5 <- c(12, 11, 13, 14)
+
+data <- data.frame(y, x1, x2, x3, x4, x5)
+
+top_labels <- c('Software<br>Engineer', 'Data<br>Scientist', 'Project<br>Manager', 'Mechanical<br>Engineer', 'Data<br>Engineer')
+
+p5 <- plot_ly(data, x = ~x1, y = ~y, type = 'bar', orientation = 'h',
+        marker = list(color = 'rgba(102,205,170, 0.8)',
+                      line = list(color = 'rgba(0, 0, 0, 0)', width = 1))) %>%
+  add_trace(x = ~x2, marker = list(color = 'rgba(91,184,153, 0.8)')) %>%
+  add_trace(x = ~x3, marker = list(color = 'rgba(72,147,122, 0.8)')) %>%
+  add_trace(x = ~x4, marker = list(color = 'rgba(50,102,85, 0.8)')) %>%
+  add_trace(x = ~x5, marker = list(color = 'rgba(30,61,51, 0.8)')) %>%
+  layout(xaxis = list(title = "",
+                      showgrid = FALSE,
+                      showline = FALSE,
+                      showticklabels = FALSE,
+                      zeroline = FALSE,
+                      domain = c(0.15, 1)),
+         yaxis = list(title = "",
+                      showgrid = FALSE,
+                      showline = FALSE,
+                      showticklabels = FALSE,
+                      zeroline = FALSE),
+         barmode = 'stack',
+         paper_bgcolor = 'rgba(0, 0, 0, 0)', plot_bgcolor = 'rgba(0, 0, 0, 0)',
+         margin = list(l = 120, r = 10, t = 140, b = 80),
+         showlegend = FALSE) %>%
+  # labeling the y-axis
+  add_annotations(xref = 'paper', yref = 'y', x = 0.14, y = y,
+                  xanchor = 'right',
+                  text = y,
+                  font = list(family = 'Arial', size = 12,
+                            color = 'rgb(67, 67, 67)'),
+                  showarrow = FALSE, align = 'right') %>%
+  # labeling the percentages of each bar (x_axis)
+  add_annotations(xref = 'x', yref = 'y',
+                  x = x1 / 2, y = y,
+                  text = paste(data[,"x1"], '%'),
+                  font = list(family = 'Arial', size = 12,
+                            color = 'rgb(248, 248, 255)'),
+                  showarrow = FALSE) %>%
+  add_annotations(xref = 'x', yref = 'y',
+                  x = x1 + x2 / 2, y = y,
+                  text = paste(data[,"x2"], '%'),
+                  font = list(family = 'Arial', size = 12,
+                              color = 'rgb(248, 248, 255)'),
+                  showarrow = FALSE) %>%
+  add_annotations(xref = 'x', yref = 'y',
+                  x = x1 + x2 + x3 / 2, y = y,
+                  text = paste(data[,"x3"], '%'),
+                  font = list(family = 'Arial', size = 12,
+                              color = 'rgb(248, 248, 255)'),
+                  showarrow = FALSE) %>%
+  add_annotations(xref = 'x', yref = 'y',
+                  x = x1 + x2 + x3 + x4 / 2, y = y,
+                  text = paste(data[,"x4"], '%'),
+                  font = list(family = 'Arial', size = 12,
+                              color = 'rgb(248, 248, 255)'),
+                  showarrow = FALSE) %>%
+  add_annotations(xref = 'x', yref = 'y',
+                  x = x1 + x2 + x3 + x4 + x5 / 2, y = y,
+                  text = paste(data[,"x5"], '%'),
+                  font = list(family = 'Arial', size = 12,
+                              color = 'rgb(248, 248, 255)'),
+                  showarrow = FALSE) %>%
+  # labeling the first Likert scale (on the top)
+  add_annotations(xref = 'x', yref = 'paper',
+                  x = c(21 / 2, 21 + 30 / 2, 21 + 30 + 21 / 2, 21 + 30 + 21 + 16 / 2,
+                        21 + 30 + 21 + 16 + 12 / 2),
+                  y = 1.15,
+                  text = top_labels,
+                  font = list(family = 'Arial', size = 12,
+                              color = 'rgb(67, 67, 67)'),
+                  showarrow = FALSE)
+p5
+```
+

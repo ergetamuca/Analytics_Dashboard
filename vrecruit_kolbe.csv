@@ -1,0 +1,21 @@
+﻿candidate_id,candidate_name,fact_finder,follow_thru,quick_start,implementor,nr_jobs_applied,gender,session_length_sec,job_applied
+10001,Jocelyn Luizzi,1,10,3,2,3,female,1200,Software Engineer
+10002,Ergeta Muca,3,3,5,3,2,female,900,Data Scientist
+10003,Kember Campbell,6,4,6,3,4,female,780,Project Manager
+10004,David Torres,4,6,8,1,2,male,990,Software Engineer
+10005,Laurette Leadon,7,3,5,1,1,female,1100,Data Scientist
+10006,Taylor Rohrich,5,3,3,3,1,male,1100,Software Engineer
+10007,Zachary Ovenshire,10,4,5,4,1,male,1000,Software Engineer
+10008,Mitesh Motwani,2,6,6,3,1,male,1200,Mechanical Engineer
+10009,Carlos Mella,3,1,2,5,1,male,1200,Software Engineer
+10010,Anisa Jordan,4,1,1,6,1,female,990,Data Scientist
+10011,Samantha Lin,1,3,4,6,3,female,800,Data Engineer
+10012,Rajitha Patel,2,4,5,7,3,female,770,Data Engineer
+10013,Kris Cornell,3,4,3,5,2,male,990,Data Engineer
+10014,Anushka Tomic,5,6,2,7,2,female,900,Software Engineer
+10015,Cambria Kipler,7,7,3,8,1,female,999,Mechanical Engineer
+10016,Joseph Frank,4,5,1,4,3,male,1150,Project Manager
+10017,Julia Lopez,6,8,2,4,4,female,1300,Project Manager
+10018,Andrea Files,5,8,4,10,3,male,1130,Data Scientist
+10019,Justin Balvin,2,7,6,3,2,male,1111,Data Scientist
+10020,Alexandra Smith,3,4,4,4,4,female,780,Data Scientist
